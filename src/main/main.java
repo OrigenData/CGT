@@ -4,7 +4,6 @@ import clases.ListSoftware;
 import clases.Changer;
 import java.io.*;
 import java.util.Scanner;
-//import java.util.StringTokenizer;
 
 public class main {
 
@@ -51,7 +50,6 @@ public class main {
 						ch.print_theme();
 						ch.select_print_theme();
 						ch.end_theme();
-						ch.modific_desktop_file();
 						pause();
 						break;
 					case 3:
@@ -77,7 +75,6 @@ public class main {
 		try {
 			System.in.read();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
