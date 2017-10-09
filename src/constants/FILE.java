@@ -2,10 +2,10 @@ package constants;
 
 public interface FILE {
 	
-	String homeDir = System.getProperty("user.home");
+	String HOME_DIR = System.getProperty("user.home");
 	
-	String FOLDER_DIR=homeDir+"/.ChangerThemeGTK/dir";
-	String FOLDER_LIST=homeDir+"/.ChangerThemeGTK/list";
+	String FOLDER_DIR=HOME_DIR+"/.ChangerThemeGTK/dir";
+	String FOLDER_LIST=HOME_DIR+"/.ChangerThemeGTK/list";
 	
 	
 	String LIST_SOFT=FOLDER_LIST+"/list_soft.log";
@@ -14,6 +14,8 @@ public interface FILE {
 	String LIST_THEMES=FOLDER_LIST+"/list_themes.log";
 	String LIST_THEMES_DIR=FOLDER_DIR+"/list_themes_dir.log";
 	
+	String LIST_DESKTOP=FOLDER_LIST+"/list_desktop.log";
 	
-	String homeApplications=homeDir+"/.local/share/applications/";
+	
+	String HOME_APPLICATIONS=HOME_DIR+"/.local/share/applications/";
 }
