@@ -26,7 +26,6 @@ public class Changer implements FILE{
 	private String s=null;
 	private int counter=0;
 	private String list_theme[];
-	private String name_soft=null;
 	private String name_theme=null;
 	private String destino=null;
 	private String desti=null;
@@ -51,6 +50,7 @@ public class Changer implements FILE{
 		
 	}
 	
+	@SuppressWarnings("null")
 	public void print_select_soft() throws IOException {
 		
 		@SuppressWarnings("resource")
@@ -73,11 +73,9 @@ public class Changer implements FILE{
 		}
 		
 		bf1.close();
-		name_soft=nameSearch;
 		System.out.println("\n\nSelecciono \""+nameSearch+"\"\n\n");
 		
 		
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		/*
 		 * Aqui es donde se copia el archivo desktop del direcotiro raiz a nuestro home
 		 */
@@ -98,12 +96,40 @@ public class Changer implements FILE{
 		
 		bf2.close();
 		
-		System.out.print("Renombra el archivo .desktop (No tiene que haber espacios): ");
-		String new_desktop=reading.nextLine();
+		
+		/*
+		 * 
+		 * Aqui leera el archivo desktop
+		 * 
+		 * 
+		 */
+		list_desktop();
+		String list_desktop=null;
+		//Se imprimira la lista de programas
+				FileReader fr = new FileReader(LIST_DESKTOP);
+				BufferedReader bf = new BufferedReader(fr);
+						
+				
+				int c=0;
+				while((s=bf.readLine())!=null){
+					
+					if(c<NumApp){
+						
+						list_desktop=s;
+						
+						c++;
+						}
+					}
+				bf.close();
+				
+				System.out.print("\nSe estara creando el archivo: "+list_desktop);
+		
+	
 		 File origen = new File(nameSearch);
-		 destino=homeApplications+new_desktop+".desktop";
+		 destino=HOME_APPLICATIONS+list_desktop;
+	
+		 
 		 desti=destino;
-		 System.out.print("Eso es solo un: "+destino);
          File destino = new File(desti);
 
          try {
@@ -122,18 +148,69 @@ public class Changer implements FILE{
          } catch (IOException ioe){
                  ioe.printStackTrace();
          }
-         
-         
-         
-        
-         
-         	
- 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
+        	
 		
 	}
 	
+
 	
+	public void list_desktop() throws IOException {
+		char[] arrayChar_desktop;
+		String s;
+		//Aqui se guarda el directorio de cada software
+		Process p = Runtime.getRuntime().exec("grep -Hirnm 1 Name= /usr/share/applications");
+		BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
+
+		File f = new File(LIST_DESKTOP);
+		
+		BufferedWriter bw = new BufferedWriter(new FileWriter(f));
+		PrintWriter pw = new PrintWriter(bw);
+		int contador=0;
+		while ((s = br.readLine()) != null) {  
+			
+			//Pasaremos los caracteres en un Array Char
+			arrayChar_desktop=s.toCharArray();
+			for(int i=0; i<arrayChar_desktop.length; i++){
+				
+				
+				if( arrayChar_desktop[i] == '/')
+				{ 
+					
+					/*
+					 * Detectera los primeros ":" que se impriman en la lina
+					 * Dara un salto de linea y break para continuar leyendo
+					 * la siguiente linea
+					 */
+					
+					contador++;
+					
+	
+				}
+				
+				else if(contador==4) {
+					
+					
+					if(arrayChar_desktop[i] == ':') {
+						pw.append("\n");
+						break;
+						}
+						else {
+							pw.append(arrayChar_desktop[i]);
+						}
+					
+					
+					
+				}
+			}
+			
+			contador=0;	
+			
+		}
+    
+		pw.close();
+	}
+	
+
 	
 	//Aqui es donde empezara a cambiar el tema GTK de la app seleccionada
 
@@ -173,14 +250,14 @@ public class Changer implements FILE{
 		FileReader fr = new FileReader(LIST_THEMES_DIR);
 		BufferedReader bf = new BufferedReader(fr);
 				
-		//System.out.println("\n\nLista de temas\n");
+		
 		int c=0;
 		while((s=bf.readLine())!=null){
 			//
 			if(c<counter){
-				//
+				
 				list_theme[c]=s;
-				//System.out.println(counterr+") "+list_theme[counterr]);
+				
 				c++;
 				}
 			}
@@ -200,13 +277,13 @@ public class Changer implements FILE{
 		BufferedWriter bw = new BufferedWriter(new FileWriter(f));
 		PrintWriter pw = new PrintWriter(bw);
 		for(int cont=0; cont<counter; cont++) {
-			Process p = Runtime.getRuntime().exec("grep -Hirnm 1 Name= "+list_theme[cont]);
+			Process p = Runtime.getRuntime().exec("grep -Hirnm 2 Name= "+list_theme[cont]);
 			
 			BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
 
 			
 			while ((s = br.readLine()) != null) {
-				//System.out.println(s);
+			
 				char[] ArrayChar=s.toCharArray();
 				for(int i=0; i<ArrayChar.length; i++){
 					//
@@ -214,6 +291,7 @@ public class Changer implements FILE{
 						i++; 
 						for(int j=i; j<ArrayChar.length; j++){
 							pw.append(ArrayChar[j]);
+				
 							
 						}
 						
@@ -274,11 +352,7 @@ public class Changer implements FILE{
 		System.out.println("\n\nSelecciono \""+nameSearch+"\"\n\n");
 	}
 	
-	
-	
-	/**
-	 * @throws IOException ****************************************************************************************************************************/
-	
+
 	public void Search_Exec_method() throws IOException {
 		
 		//Comando a ejecutar - Busca las lineas donde aparece Name=
@@ -317,30 +391,9 @@ public class Changer implements FILE{
     
 		pw.close();
 		
-		
-		System.out.println("Es texto que voy a pegar: "+txtNombre.toString()+"\n\nEjemplo:\n\n"
-				+ THEME+"Arc-Dark "+txtNombre.toString()
-				+"\n\n\n");
-		
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	/******************************************************************************************************************************/
-	
-	
-	
+		
+		
 	public void replaceText(String replace_text_with) {
 		
 		 try {
@@ -362,7 +415,7 @@ public class Changer implements FILE{
 		        
 		     
 
-		        // write the new String with the replaced line OVER the same file
+		        // Escribe el nuevo String con la linea remplazada sobre el mismo archivo
 		        FileOutputStream fileOut = new FileOutputStream(destino);
 		        fileOut.write(inputString.getBytes());
 		        fileOut.close();
@@ -377,19 +430,17 @@ public class Changer implements FILE{
 	
 	public void end_theme() {
 		
-	try {
-		Search_Exec_method();
+		try {
+			Search_Exec_method();
 		
-		replaceText("Exec="+txtNombre.toString());
-	} catch (IOException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
+			replaceText("Exec="+txtNombre.toString());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			}
 	
 	}
 	
 	
 	
-	
-
-	}
+}
